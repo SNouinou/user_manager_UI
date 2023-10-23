@@ -1,0 +1,52 @@
+<div class="container">
+  <div *ngIf="errorMsg" class="text-danger">
+    {{ errorMsg }}
+  </div>
+  <app-search-form
+    *ngIf="!loading"
+    [searchFormIsInvalid]="searchFormIsInvalid"
+    (searchFormSubmit)="onSearchFormSubmit($event)"
+  >
+  </app-search-form>
+
+  <div
+    *ngIf="!usersList && !errorMsg"
+    class="d-flex justify-content-center align-items-center"
+  >
+    <div class="spinner-border text-dark spinner-border-lg" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  <div class="card" *ngIf="usersList">
+    <div class="card-header">Header</div>
+    <div class="card-body">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Roles</th>
+            <th>Disabled</th>
+            <th>delete?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let user of usersList"
+            app-user-list-row
+            (handleDisableUser)="handleDisableUser($event)"
+            (handleDeleteUser)="handleDeleteUser($event)"
+            [user]="user"
+          ></tr>
+        </tbody>
+      </table>
+      <app-user-pagination
+        [currentPage]="currentPage"
+        [totalPages]="totalPages"
+        (fetchUserPage)="fetchUserPage($event)"
+      >
+      </app-user-pagination>
+    </div>
+    <div class="card-footer text-muted">Footer</div>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<form (submit)="onSearchFormSubmit()">
+  {{ usernameSearchKeyword || "&nbsp;" }}
+  <div class="form-group">
+    <div class="input-group">
+      <input
+        (keydown)="onKeyPress($event)"
+        [(ngModel)]="usernameSearchKeyword"
+        type="text"
+        name="username"
+        id=""
+        [ngClass]="{ 'is-invalid': searchFormIsInvalid }"
+        class="form-control"
+        placeholder="User search"
+      />
+      <button class="btn btn-outline-secondary" type="submit">
+        <i class="bi bi-search"></i>
+      </button>
+      <div class="invalid-feedback" *ngIf="searchFormIsInvalid">
+        Please choose a username.
+      </div>
+    </div>
+  </div>
+</form>

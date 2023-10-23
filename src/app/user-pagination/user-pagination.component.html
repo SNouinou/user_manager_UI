@@ -1,0 +1,30 @@
+<nav>
+  <ul class="pagination">
+    <li class="page-item" [class.disabled]="currentPage == 1">
+      <a class="page-link" (click)="onFetchUserPage(currentPage - 1)">
+        <span>&laquo;</span>
+      </a>
+    </li>
+    <li
+      *ngFor="let page of [].constructor(totalPages); let pIndex = index"
+      class="page-item"
+      [class.active]="currentPage == pIndex + 1"
+    >
+      <a
+        class="page-link"
+        (click)="
+          currentPage != pIndex + 1
+            ? onFetchUserPage(pIndex + 1)
+            : onFetchUserPage(pIndex + 1)
+        "
+      >
+        {{ pIndex + 1 }}
+      </a>
+    </li>
+    <li class="page-item" [class.disabled]="currentPage >= totalPages">
+      <a class="page-link" (click)="onFetchUserPage(currentPage + 1)">
+        <span>&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>

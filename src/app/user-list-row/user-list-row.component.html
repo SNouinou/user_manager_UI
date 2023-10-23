@@ -1,0 +1,39 @@
+<td>{{ user.id }}</td>
+<td>{{ user.username }}</td>
+<td>{{ user.roles }}</td>
+<td>
+  <button
+    (click)="onDisableUser()"
+    type="button"
+    class="btn"
+    [class]="user.enabled ? 'btn-success' : 'btn-danger'"
+    [disabled]="user.disable.loading"
+    data-testid="disable-button"
+  >
+    <span
+      *ngIf="user.disable.loading; else disableNotLoading"
+      class="spinner-border spinner-border-sm"
+    ></span>
+    <ng-template #disableNotLoading>
+      <i *ngIf="!user.enabled" class="bi bi-dash-circle"></i>
+      <i *ngIf="user.enabled" class="bi bi-check2"></i>
+    </ng-template>
+  </button>
+</td>
+<td>
+  <button
+    (click)="onDeleteUser()"
+    type="button"
+    class="btn btn-danger"
+    [disabled]="user.delete.loading"
+    data-testid="delete-button"
+  >
+    <span
+      *ngIf="user.delete.loading; else notLoading"
+      class="spinner-border spinner-border-sm"
+    ></span>
+    <ng-template #notLoading>
+      <i class="bi bi-trash"></i>
+    </ng-template>
+  </button>
+</td>
