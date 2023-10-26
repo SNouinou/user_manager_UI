@@ -3,7 +3,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'app-search-form',
   templateUrl: './user-search-form.component.html',
-  styleUrls: ['./user-search-form.component.css']
+  styleUrls: ['./user-search-form.component.scss']
 })
 export class UserSearchFormComponent {
   @Input() usernameSearchKeyword: string = '';

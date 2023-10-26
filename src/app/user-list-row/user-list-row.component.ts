@@ -9,7 +9,7 @@ import { UserRow } from '../models/user-row';
 @Component({
   selector: '[app-user-list-row]',
   templateUrl: './user-list-row.component.html',
-  styleUrls: ['./user-list-row.component.css'],
+  styleUrls: ['./user-list-row.component.scss'],
 })
 export class UserListRowComponent {
   @Input() user!: UserRow;
