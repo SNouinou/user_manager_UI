@@ -1,0 +1,84 @@
+<div class="container">
+  <ng-template #loggedOut> Please wait... </ng-template>
+  <div
+    class="card col-6 offset-sm-3"
+    *ngIf="!authenticated; else loggedOut"
+  >
+    <div class="card-header">Authentification</div>
+    <div class="card-body">
+      <form
+        (ngSubmit)="handleLogin()"
+        [formGroup]="loginFormGroup"
+        class="needs-validation"
+        [class]="!submited ? 'needs-validation' : 'was-validated'"
+      >
+        <div class="mb-3 row">
+          <label for="inputName" class="col-4 col-form-label">Username</label>
+          <div class="col-8">
+            <input
+              type="text"
+              class="n-form-control"
+              name="inputName"
+              id="inputName"
+              placeholder="Name"
+              [formControl]="usernameControl"
+              [class.n-invalid]="submited && !usernameControl.valid"
+              [class.n-valid]="submited && usernameControl.valid"
+            />
+            <div
+              [hidden]="
+                usernameControl.valid || (usernameControl.pristine && !submited)
+              "
+              class="alert alert-danger"
+            >
+              {{
+                usernameControl.errors?.["required"] != null
+                  ? "Required Username"
+                  : "Username can't be empty"
+              }}
+            </div>
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <label for="inputPassword" class="col-4 col-form-label"
+            >Password</label
+          >
+          <div class="col-8">
+            <input
+              type="password"
+              class="n-form-control"
+              name="inputPassword"
+              id="inputPassword"
+              placeholder="Password"
+              [formControl]="passwordControl"
+              [class.n-invalid]="submited && !passwordControl.valid"
+              [class.n-valid]="submited && passwordControl.valid"
+            />
+            <div
+              [hidden]="
+                passwordControl.valid || (passwordControl.pristine && !submited)
+              "
+              class="alert alert-danger"
+            >
+              Required password
+            </div>
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <div class="offset-sm-4 col-sm-8">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="submited && loginFormGroup.invalid"
+            >
+              Action
+            </button>
+          </div>
+        </div>
+        <div class="alert alert-danger" role="alert" *ngIf="errorMsg">
+          <strong>Failed to login</strong> {{ errorMsg }}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
