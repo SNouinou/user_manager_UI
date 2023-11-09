@@ -20,7 +20,7 @@ export class AuthService {
 
   constructor(private appStateService: AppStateService) {}
 
-  // TODO: replace this method with http request
+  // TODO: replace this method with http request  
   authenticate(username: string, password: string): Observable<any> {
     return new Observable((subscriber) => {
       const credentials = this.data.find((item) => item.username === username);
@@ -47,7 +47,7 @@ export class AuthService {
         const payload = jwtDecode<any>(response.token);
         const { roles, username } = payload;
         this.appStateService.setAuthState({
-          authenticated: true,
+          isAuthenticated: true,
           auth: response.token,
           roles,
           username,
@@ -57,5 +57,14 @@ export class AuthService {
     } catch (err) {
       throw err;
     }
+  }
+
+  async disconnect() {
+    this.appStateService.setAuthState({
+      isAuthenticated: false,
+      auth: undefined,
+      roles: undefined,
+      username: undefined,
+    });
   }
 }
