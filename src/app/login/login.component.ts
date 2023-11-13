@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { AppStateService } from '../services/app-state.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -12,6 +13,7 @@ export class LoginComponent implements OnInit {
   submited = false;
   authenticated: boolean = false;
   errorMsg: string | null = null;
+  authState!: any;
 
   public noWhitespaceValidator(
     control: FormControl,
@@ -34,17 +36,23 @@ export class LoginComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
+    private appStateService: AppStateService,
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.authState = this.appStateService.authState;
+  }
 
   async handleLogin(): Promise<void> {
+    this.appStateService.setAuthState({ error: undefined });
+
     this.errorMsg = null;
     if (!this.loginFormGroup.valid) {
       this.submited = true;
       return;
     }
     const { username, password } = this.loginFormGroup.value;
+
     try {
       await this.authService.login(username, password);
       this.router.navigateByUrl('/users');

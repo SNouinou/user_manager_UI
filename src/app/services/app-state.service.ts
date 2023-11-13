@@ -12,6 +12,7 @@ export class AppStateService {
     token: undefined,
     username: undefined,
     roles: undefined,
+    error: undefined,
   };
 
   private authStateCopy = {...this._authState};

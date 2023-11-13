@@ -1,9 +1,9 @@
 <div class="container">
   <ng-template #loggedOut> Please wait... </ng-template>
-  <div
-    class="card col-6 offset-sm-3"
-    *ngIf="!authenticated; else loggedOut"
-  >
+  <div class="alert alert-danger" role="alert" *ngIf="authState.error">
+    {{ authState.error }}
+  </div>
+  <div class="card col-6 offset-sm-3" *ngIf="!authenticated; else loggedOut">
     <div class="card-header">Authentification</div>
     <div class="card-body">
       <form
