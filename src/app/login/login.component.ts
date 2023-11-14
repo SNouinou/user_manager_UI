@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AppStateService } from '../services/app-state.service';
@@ -11,7 +11,6 @@ import { AuthService } from '../services/auth.service';
 })
 export class LoginComponent implements OnInit {
   submited = false;
-  authenticated: boolean = false;
   errorMsg: string | null = null;
   authState!: any;
 
@@ -45,14 +44,14 @@ export class LoginComponent implements OnInit {
 
   async handleLogin(): Promise<void> {
     this.appStateService.setAuthState({ error: undefined });
-
     this.errorMsg = null;
+    this.submited = true;
+    
     if (!this.loginFormGroup.valid) {
-      this.submited = true;
       return;
     }
-    const { username, password } = this.loginFormGroup.value;
 
+    const { username, password } = this.loginFormGroup.value;
     try {
       await this.authService.login(username, password);
       this.router.navigateByUrl('/users');
