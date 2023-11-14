@@ -10,7 +10,6 @@ export const authenticationGuard: any = (
   const router = inject(Router);
   if (!appStateService?.authState?.isAuthenticated) {
     appStateService.setAuthState({error: 'To view the requested page, you must be logged in to your account.'});
-    debugger;
     router.navigateByUrl('login');
     return false;
   }
