@@ -12,6 +12,7 @@ import { UserPaginationComponent } from './user-pagination/user-pagination.compo
 import { UserSearchFormComponent } from './user-search-form/user-search-form.component';
 import { UsersComponent } from './users/users.component';
 import { HttpClientModule } from '@angular/common/http';
+import { BatchComponent } from './batch/batch.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { HttpClientModule } from '@angular/common/http';
     LoginComponent,
     ProfileComponent,
     GenerateUsersComponent,
+    BatchComponent,
   ],
   imports: [
     BrowserModule,

@@ -16,6 +16,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root',
 })
 export class UserService {
+
   readonly PAGE_SIZE = 5;
   static readonly BACKEND_HOST = 'http://localhost:4200/api';
 
@@ -261,4 +262,16 @@ export class UserService {
 
     return null;
   }
+
+  async uploadUserList(file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+    const upload$ = await firstValueFrom(
+      this._httpClient.post(`${UserService.BACKEND_HOST}/users/batch`, formData, {
+        observe: 'body',
+      })
+    );
+    return upload$;
+  }
+
 }

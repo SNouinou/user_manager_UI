@@ -1,0 +1,51 @@
+<div class="card col-6 offset-sm-3">
+  <div class="card-header">batch Users</div>
+  <div class="card-body">
+    <form (ngSubmit)="handleBatch()">
+      <div class="mb-3 row">
+        <div class="col-8">
+          <div class="form-group">
+            <label for="usersList" class="col-4 col-form-label">
+              Users list file:
+            </label>
+            <input
+              type="file"
+              class="form-control-file"
+              name="usersList"
+              id="users-list"
+              placeholder="users list"
+              (change)="onFileSelected($event)"
+              accept="application/json"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <div class="offset-sm-4 col-sm-8">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="uploadLoading"
+          >
+            <span
+              class="spinner-border spinner-border-sm"
+              role="status"
+              *ngIf="uploadLoading"
+            ></span>
+            Upload
+          </button>
+        </div>
+      </div>
+      <div class="alert alert-danger" role="alert" *ngIf="errorMsg">
+        <strong>Failed to generate users : </strong> {{ errorMsg }}
+      </div>
+    </form>
+  </div>
+</div>
+<div
+  class="alert alert-success col-6 offset-sm-3"
+  role="alert"
+  *ngIf="this.successMsg"
+>
+  <strong>success: {{ this.successMsg }}</strong>
+</div>
