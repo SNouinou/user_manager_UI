@@ -1,0 +1,43 @@
+<div class="container">
+  <div class="card col-6 offset-sm-3">
+    <div class="card-header">Generate Users</div>
+    <div class="card-body">
+      <form
+        (ngSubmit)="handleGenerate()"
+        class="needs-validation"
+        [class]="!submited ? 'needs-validation' : 'was-validated'"
+      >
+        <div class="mb-3 row">
+          <label for="inputName" class="col-4 col-form-label"
+            >Data count:</label
+          >
+          <div class="col-8">
+            <input
+              type="number"
+              class="n-form-control"
+              name="inputName"
+              id="inputName"
+              placeholder="Size"
+              [formControl]="dataSizeControl"
+            />
+            <div class="alert alert-danger" [hidden]="dataSizeControl.valid">
+              {{
+                dataSizeControl.errors?.["required"] != null
+                  ? "List size Required"
+                  : "List size must be a valid value under " + maxSize + "."
+              }}
+            </div>
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <div class="offset-sm-4 col-sm-8">
+            <button type="submit" class="btn btn-primary">Generate</button>
+          </div>
+        </div>
+        <div class="alert alert-danger" role="alert" *ngIf="errorMsg">
+          <strong>Failed to generate users : </strong> {{ errorMsg }}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

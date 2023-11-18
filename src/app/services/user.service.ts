@@ -3,22 +3,24 @@ import {
   Observable,
   delay,
   dematerialize,
+  firstValueFrom,
   materialize,
   of,
-  pipe,
   throwError,
 } from 'rxjs';
-import { User } from '../models/user';
 import { v4 as uuidv4 } from 'uuid';
+import { User } from '../models/user';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   readonly PAGE_SIZE = 5;
+  static readonly BACKEND_HOST = 'http://localhost:4200/api';
 
   private users!: Array<User>;
-  constructor() {
+  constructor(private _httpClient: HttpClient) {
     this.users = [
       {
         id: uuidv4(),
@@ -161,7 +163,9 @@ export class UserService {
   public filterByUsername(
     usernameSearchKey: string,
   ): Observable<User[] | never> {
-    let filter = this.users.filter((u) => u.username.includes(usernameSearchKey));
+    let filter = this.users.filter((u) =>
+      u.username.includes(usernameSearchKey),
+    );
     if (!filter || filter.length == 0)
       return throwError(
         () => new Error(`no user is found for username=${usernameSearchKey}`),
@@ -222,5 +226,39 @@ export class UserService {
     let offScreen = filter[end];
 
     return of({ totalPages, offScreen }).pipe(delay(250));
+  }
+
+  async generate(count: number): Promise<{ filename: string, content:any }> {
+    try {
+      const response = await firstValueFrom(
+        this._httpClient.get(`${UserService.BACKEND_HOST}/users/generate`, {
+          params: { count },
+          observe: 'response', // <- provide response headers aswell.
+        }),
+      );
+      const content = response.body;
+
+      const contentDisposition = response.headers.get('Content-Disposition');
+      const filename = this.extractFilename(contentDisposition) || 'file';
+
+      return Promise.resolve({ filename, content });
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
+  private extractFilename(contentDisposition: string | null): string | null {
+    if (!contentDisposition) {
+      return null;
+    }
+
+    const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+    const matches = filenameRegex.exec(contentDisposition);
+
+    if (matches != null && matches[1]) {
+      return matches[1].replace(/['"]/g, '');
+    }
+
+    return null;
   }
 }
