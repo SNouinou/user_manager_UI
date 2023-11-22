@@ -16,8 +16,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root',
 })
 export class UserService {
-
-  readonly PAGE_SIZE = 5;
+  static readonly PAGE_SIZE = 5;
   static readonly BACKEND_HOST = 'http://localhost:4200/api';
 
   private users!: Array<User>;
@@ -26,116 +25,16 @@ export class UserService {
       {
         id: uuidv4(),
         username: 'admin',
-        profile: { roles: ['admin'] },
+        roles: ['admin'],
         enabled: true,
       },
       {
         id: uuidv4(),
         username: 'user1',
-        profile: { roles: ['role1', 'role2'] },
+        roles: ['role1', 'role2'],
         enabled: true,
-      },
-      {
-        id: uuidv4(),
-        username: 'user2',
-        profile: { roles: [] },
-        enabled: false,
-      },
-      {
-        id: uuidv4(),
-        username: 'admin',
-        profile: { roles: ['admin'] },
-        enabled: true,
-      },
-      {
-        id: uuidv4(),
-        username: 'user1',
-        profile: { roles: ['role1', 'role2'] },
-        enabled: true,
-      },
-      {
-        id: uuidv4(),
-        username: 'user2',
-        profile: { roles: [] },
-        enabled: false,
-      },
-      {
-        id: uuidv4(),
-        username: 'admin',
-        profile: { roles: ['admin'] },
-        enabled: true,
-      },
-      {
-        id: uuidv4(),
-        username: 'user1',
-        profile: { roles: ['role1', 'role2'] },
-        enabled: true,
-      },
-      {
-        id: uuidv4(),
-        username: 'user2',
-        profile: { roles: [] },
-        enabled: false,
-      },
-      {
-        id: uuidv4(),
-        username: 'admin',
-        profile: { roles: ['admin'] },
-        enabled: true,
-      },
-      {
-        id: uuidv4(),
-        username: 'user1',
-        profile: { roles: ['role1', 'role2'] },
-        enabled: true,
-      },
-      {
-        id: uuidv4(),
-        username: 'user2',
-        profile: { roles: [] },
-        enabled: false,
-      },
-      {
-        id: uuidv4(),
-        username: 'admin',
-        profile: { roles: ['admin'] },
-        enabled: true,
-      },
-      {
-        id: uuidv4(),
-        username: 'user1',
-        profile: { roles: ['role1', 'role2'] },
-        enabled: true,
-      },
-      {
-        id: uuidv4(),
-        username: 'user2',
-        profile: { roles: [] },
-        enabled: false,
-      },
-      {
-        id: uuidv4(),
-        username: 'admin',
-        profile: { roles: ['admin'] },
-        enabled: true,
-      },
-      {
-        id: uuidv4(),
-        username: 'user1',
-        profile: { roles: ['role1', 'role2'] },
-        enabled: true,
-      },
-      {
-        id: uuidv4(),
-        username: 'user2',
-        profile: { roles: [] },
-        enabled: false,
       },
     ];
-  }
-
-  public getAllUsers(): Observable<Array<User>> {
-    return of([...this.users]).pipe(delay(1000));
   }
 
   public deleteUser(id: string): Observable<{ itemsDeleted: number }> {
@@ -161,75 +60,39 @@ export class UserService {
     return of(true).pipe(delay(500));
   }
 
-  public filterByUsername(
-    usernameSearchKey: string,
-  ): Observable<User[] | never> {
-    let filter = this.users.filter((u) =>
-      u.username.includes(usernameSearchKey),
-    );
-    if (!filter || filter.length == 0)
-      return throwError(
-        () => new Error(`no user is found for username=${usernameSearchKey}`),
-      ).pipe(delay(250));
-    return of(filter).pipe(delay(250));
-  }
-
-  getPage(
+  async getPage(
     page: number,
     searchFilter: string,
-  ): Observable<{ users: User[]; totalPages: number; offScreen: User }> {
-    let filter = this.users.filter((u) => u.username.includes(searchFilter));
-    if (!filter || filter.length == 0)
-      return throwError(
-        () =>
-          new Error(`no user is found for following filter=${searchFilter}`),
-      ).pipe(delay(250));
-    let totalPages;
-    if (filter.length % this.PAGE_SIZE == 0) {
-      totalPages = Math.floor(filter.length / this.PAGE_SIZE);
-    } else {
-      totalPages = Math.floor(filter.length / this.PAGE_SIZE) + 1;
-    }
-    if (page > totalPages) {
-      return throwError(() => new Error("page requested doesn't exist")).pipe(
-        materialize(),
-        delay(500),
-        dematerialize(),
+  ): Promise<{ users: User[]; totalPages: number; offScreen: User[] }> {
+    try {
+      const response = await firstValueFrom(
+        this._httpClient.get<{
+          content: User[];
+          totalPages: number;
+        }>(`${UserService.BACKEND_HOST}/users/fetch`, {
+          params: { page, username: searchFilter, size: UserService.PAGE_SIZE },
+        }),
       );
-    }
+      if (!response || !response.content || response.content.length == 0)
+        throw new Error(
+          `no user is found for following filter=${searchFilter}`,
+        );
+      let { totalPages, content: users } = response;
 
-    let start = this.PAGE_SIZE * (page - 1); // page 2: 5
-    let end = Math.min(filter.length, this.PAGE_SIZE * page); // page 2: min(size,10)
-    let users = filter.slice(start, end); // page 2: 5->6th , 10 -> 11th(exculsed) -> 10th
-    let offScreen = filter[end];
-    return of({ users, totalPages, offScreen }).pipe(delay(250));
+      return Promise.resolve({ users, totalPages, offScreen: [] });
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 
   paginationActualisation(
     page: number,
     searchFilter: string,
-  ): Observable<{ totalPages: number; offScreen: User }> {
-    let filter = this.users.filter((u) => u.username.includes(searchFilter));
-    if (!filter || filter.length == 0)
-      return throwError(
-        () =>
-          new Error(`no user is found for following filter=${searchFilter}`),
-      ).pipe(delay(250));
-
-    let totalPages;
-    if (filter.length % this.PAGE_SIZE == 0) {
-      totalPages = Math.floor(filter.length / this.PAGE_SIZE);
-    } else {
-      totalPages = Math.floor(filter.length / this.PAGE_SIZE) + 1;
-    }
-
-    let end = Math.min(filter.length, this.PAGE_SIZE * page); // page 2: min(size,10)
-    let offScreen = filter[end];
-
-    return of({ totalPages, offScreen }).pipe(delay(250));
+  ): Promise<{ users: User[]; totalPages: number; offScreen: User[] }> {
+    return this.getPage(page, searchFilter);
   }
 
-  async generate(count: number): Promise<{ filename: string, content:any }> {
+  async generate(count: number): Promise<{ filename: string; content: any }> {
     try {
       const response = await firstValueFrom(
         this._httpClient.get(`${UserService.BACKEND_HOST}/users/generate`, {
@@ -267,11 +130,14 @@ export class UserService {
     const formData = new FormData();
     formData.append('file', file);
     const upload$ = await firstValueFrom(
-      this._httpClient.post(`${UserService.BACKEND_HOST}/users/batch`, formData, {
-        observe: 'body',
-      })
+      this._httpClient.post(
+        `${UserService.BACKEND_HOST}/users/batch`,
+        formData,
+        {
+          observe: 'body',
+        },
+      ),
     );
     return upload$;
   }
-
 }

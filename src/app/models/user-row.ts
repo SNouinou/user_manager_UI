@@ -11,7 +11,7 @@ export class UserRow {
   constructor(user: User) {
     this.id = user.id;
     this.username = user.username;
-    this.roles = user.profile.roles;
+    this.roles = user.roles;
     this.enabled = user.enabled;
     this.delete = { loading: false };
     this.disable = { loading: false };
@@ -21,7 +21,7 @@ export class UserRow {
     return {
       id: userRow.id,
       username: userRow.username,
-      profile: { roles: userRow.roles },
+      roles: userRow.roles,
       enabled: userRow.enabled,
     };
   }

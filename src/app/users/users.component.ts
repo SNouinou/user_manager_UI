@@ -32,21 +32,22 @@ export class UsersComponent implements OnInit {
   }
 
   fetchUserPage(page: number): void {
-    this.userService.getPage(page, this.currentFilter).subscribe({
-      next: ({ users, totalPages, offScreen }) => {
+    this.userService
+      .getPage(page, this.currentFilter)
+      .then(({ users, totalPages, offScreen }) => {
         this.currentPage = page;
         this.usersList = users.map((user) => new UserRow(user));
         this.totalPages = totalPages;
         this.offScreenUsersList = offScreen
-          ? [new UserRow(offScreen)]
+          ? offScreen.map((item) => new UserRow(item))
           : undefined;
         this.errorMsg = '';
         this.loading = false;
-      },
-      error: (err) => {
-        this.errorMsg = err;
-      },
-    });
+      })
+      .catch((err) => {
+        this.errorMsg =
+          err instanceof Error ? err.message : JSON.stringify(err);
+      });
   }
 
   handleDeleteUser(userRow: UserRow): void {
@@ -69,23 +70,22 @@ export class UsersComponent implements OnInit {
 
         this.userService
           .paginationActualisation(this.currentPage, this.currentFilter)
-          .subscribe({
-            next: ({ offScreen, totalPages }) => {
-              this.offScreenUsersList = offScreen
-                ? [new UserRow(offScreen)]
-                : undefined;
-              this.totalPages = totalPages;
+          .then(({ offScreen, totalPages }) => {
+            this.offScreenUsersList = offScreen
+              ? offScreen.map((item) => new UserRow(item))
+              : undefined;
+            this.totalPages = totalPages;
 
-              if (this.currentPage > this.totalPages) {
-                if (this.currentPage != 1) {
-                  this.fetchUserPage(this.currentPage - 1);
-                }
-                return;
+            if (this.currentPage > this.totalPages) {
+              if (this.currentPage != 1) {
+                this.fetchUserPage(this.currentPage - 1);
               }
-            },
-            error: (err) => {
-              this.errorMsg = err;
-            },
+              return;
+            }
+          })
+          .catch((err) => {
+            this.errorMsg =
+              err instanceof Error ? err.message : JSON.stringify(err);
           });
       },
       error: (err) => {
