@@ -6,19 +6,20 @@
       </a>
     </li>
     <li
-      *ngFor="let page of [].constructor(totalPages); let pIndex = index"
+      *ngFor="let page of displayArray"
       class="page-item"
-      [class.active]="currentPage == pIndex + 1"
+      [class.active]="currentPage+'' === page"
+      [class.disabled]="_Number.isNaN(_Number(page))"
     >
       <a
         class="page-link"
         (click)="
-          currentPage != pIndex + 1
-            ? onFetchUserPage(pIndex + 1)
-            : onFetchUserPage(pIndex + 1)
+          currentPage+'' != page && !_Number.isNaN(_Number(page))
+            ? onFetchUserPage(_Number(page))
+            : null
         "
       >
-        {{ pIndex + 1 }}
+        {{ page }}
       </a>
     </li>
     <li class="page-item" [class.disabled]="currentPage >= totalPages">
