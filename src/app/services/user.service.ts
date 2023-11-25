@@ -25,13 +25,13 @@ export class UserService {
       {
         id: uuidv4(),
         username: 'admin',
-        roles: ['admin'],
+        role: 'admin',
         enabled: true,
       },
       {
         id: uuidv4(),
         username: 'user1',
-        roles: ['role1', 'role2'],
+        role: 'role1',
         enabled: true,
       },
     ];
