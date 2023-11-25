@@ -113,6 +113,7 @@ export class UsersComponent implements OnInit {
           if (data) userRow.enabled = !userRow.enabled;
         },
         error: (err) => {
+          userRow.disable.loading = false;
           this.errorMsg = err;
         },
       });

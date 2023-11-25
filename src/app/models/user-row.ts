@@ -9,7 +9,6 @@ export class UserRow {
   disable: { loading: boolean };
 
   constructor(user: User) {
-    debugger;
     this.id = user.id;
     this.username = user.username;
     this.role = user.role;
