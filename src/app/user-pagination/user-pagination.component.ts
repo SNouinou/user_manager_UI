@@ -5,7 +5,6 @@ import {
   EventEmitter,
   OnChanges,
   SimpleChanges,
-  OnInit,
 } from '@angular/core';
 
 @Component({
@@ -14,7 +13,20 @@ import {
   styleUrls: ['./user-pagination.component.scss'],
 })
 export class UserPaginationComponent implements OnChanges {
+  size = 2;
+  displayArray: string[] = [];
+  _Number = Number;
+
+  @Input() totalPages: number = 1;
+  @Input() currentPage: number = 1;
+
+  @Output() fetchUserPage: EventEmitter<number> = new EventEmitter<number>();
+
   ngOnChanges(changes: SimpleChanges): void {
+    this.updatePagination();
+  }
+
+  private updatePagination() {
     this.displayArray = [];
     if (this.totalPages < 2 * this.size + 1) {
       for (let page = 1; page <= this.totalPages; page++) {
@@ -53,14 +65,6 @@ export class UserPaginationComponent implements OnChanges {
     }
   }
 
-  size = 2;
-  displayArray: string[] = [];
-  _Number = Number;
-
-  @Input() totalPages: number = 1;
-  @Input() currentPage: number = 1;
-
-  @Output() fetchUserPage: EventEmitter<number> = new EventEmitter<number>();
 
   onFetchUserPage(page: number) : void {
     this.fetchUserPage.emit(page);
