@@ -3,7 +3,7 @@ import { User } from './user';
 export class UserRow {
   id: string;
   username: string;
-  roles: string[];
+  role: string;
   enabled: boolean;
   delete: { loading: boolean };
   disable: { loading: boolean };
@@ -11,7 +11,7 @@ export class UserRow {
   constructor(user: User) {
     this.id = user.id;
     this.username = user.username;
-    this.roles = user.profile.roles;
+    this.role = user.role;
     this.enabled = user.enabled;
     this.delete = { loading: false };
     this.disable = { loading: false };
@@ -21,7 +21,7 @@ export class UserRow {
     return {
       id: userRow.id,
       username: userRow.username,
-      profile: { roles: userRow.roles },
+      role: userRow.role,
       enabled: userRow.enabled,
     };
   }

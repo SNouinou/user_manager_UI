@@ -20,25 +20,25 @@ describe('UsersComponent', () => {
       {
         id: uuidv4(),
         username: 'test',
-        profile: { roles: ['admin'] },
+        role: 'admin',
         enabled: true,
       },
       {
         id: uuidv4(),
         username: 'test2',
-        profile: { roles: ['admin'] },
+        role: 'admin',
         enabled: true,
       },
       {
         id: uuidv4(),
         username: 'test3',
-        profile: { roles: ['admin'] },
+        role: 'admin',
         enabled: false,
       },
       {
         id: uuidv4(),
         username: 'test4',
-        profile: { roles: ['admin'] },
+        role: 'admin',
         enabled: false,
       },
     ],
@@ -46,7 +46,7 @@ describe('UsersComponent', () => {
     offScreen: {
       id: uuidv4(),
       username: 'user1',
-      profile: { roles: ['admin'] },
+      role: 'admin',
       enabled: false,
     },
   };
@@ -67,7 +67,7 @@ describe('UsersComponent', () => {
       ],
     }).compileComponents();
     injectedService = TestBed.get(UserService);
-    spyOn(injectedService, 'getPage').and.returnValue(of(pageData));
+    spyOn(injectedService, 'getPage').and.returnValue(pageData);
     fixture = TestBed.createComponent(UsersComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -85,7 +85,7 @@ describe('UsersComponent', () => {
     expect(injectedService.getPage).toHaveBeenCalledWith(event, '');
     expect(
       fixture.nativeElement.querySelector('.container').textContent,
-    ).toContain(pageData.users[2].profile.roles[0]);
+    ).toContain(pageData.users[2].role);
     expect(
       fixture.nativeElement.querySelector('.container').textContent,
     ).not.toContain(pageData.users[2].username);
@@ -125,7 +125,7 @@ describe('UsersComponent', () => {
     const event: UserRow = {
       id: '123',
       username: '',
-      roles: [],
+      role: 'user',
       enabled: false,
       delete: {
         loading: false,
