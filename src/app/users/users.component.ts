@@ -59,40 +59,18 @@ export class UsersComponent implements OnInit {
 
     userRow.delete.loading = true;
 
-    this.userService.deleteUser(userRow.id).subscribe({
-      next: ({ itemsDeleted }) => {
+    this.userService
+      .deleteUser(userRow.id)
+      .then((data) => {
         userRow.delete.loading = false;
 
-        if (itemsDeleted != 1) return;
+        if (!data) return;
         users.splice(users.indexOf(userRow), 1);
-
-        if (this.offScreenUsersList) users.push(this.offScreenUsersList[0]);
-
-        this.userService
-          .paginationActualisation(this.currentPage, this.currentFilter)
-          .then(({ offScreen, totalPages }) => {
-            this.offScreenUsersList = offScreen
-              ? offScreen.map((item) => new UserRow(item))
-              : undefined;
-            this.totalPages = totalPages;
-
-            if (this.currentPage > this.totalPages) {
-              if (this.currentPage != 1) {
-                this.fetchUserPage(this.currentPage - 1);
-              }
-              return;
-            }
-          })
-          .catch((err) => {
-            this.errorMsg =
-              err instanceof Error ? err.message : JSON.stringify(err);
-          });
-      },
-      error: (err) => {
-        userRow.delete.loading = false;
-        this.errorMsg = err;
-      },
-    });
+      })
+      .catch((err) => {
+        this.errorMsg =
+          err instanceof Error ? err.message : JSON.stringify(err);
+      });
   }
 
   handleDisableUser(userRow: UserRow): void {
@@ -107,16 +85,14 @@ export class UsersComponent implements OnInit {
 
     this.userService
       .setUserActiveState(userRow.id, !userRow.enabled)
-      .subscribe({
-        next: (data) => {
-          userRow.disable.loading = false;
+      .then(data => {
           if (data) userRow.enabled = !userRow.enabled;
-        },
-        error: (err) => {
+        }).catch(err => {
+          this.errorMsg =
+            err instanceof Error ? err.message : JSON.stringify(err);
+        }).finally(()=>{
           userRow.disable.loading = false;
-          this.errorMsg = err;
-        },
-      });
+        });
   }
 
   onSearchFormSubmit(query: string): void {

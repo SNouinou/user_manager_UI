@@ -37,27 +37,38 @@ export class UserService {
     ];
   }
 
-  public deleteUser(id: string): Observable<{ itemsDeleted: number }> {
-    let out = this.users.length;
-    this.users = this.users.filter((u) => u.id != id);
-    out -= this.users.length;
-    if (out == 0)
-      return throwError(() => {
-        new Error(`no user is found for id=${id}`);
-      }).pipe(delay(500));
+  async deleteUser(id: string): Promise<boolean> {
+    try {
+      const response = await firstValueFrom(
+        this._httpClient.delete<boolean>(`${UserService.BACKEND_HOST}/users/deleteItem`, {
+          params: { id },
+        }),
+      );
+      if (!response)
+        throw new Error(
+          `an issue occured while trying to delete the user with id: ${id}`,
+        );
 
-    return of({ itemsDeleted: out }).pipe(delay(500));
+      return Promise.resolve(response);
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 
-  public setUserActiveState(id: string, value: boolean): Observable<boolean> {
-    let lookup = this.users.filter((u) => u.id == id);
-    if (!lookup || lookup.length == 0)
-      return throwError(() => new Error(`no user is found for id=${id}`)).pipe(
-        delay(500),
+  async setUserActiveState(id: string, value: boolean): Promise<boolean> {
+    try {
+      const response = await firstValueFrom(
+        this._httpClient.post<boolean>(`${UserService.BACKEND_HOST}/users/toggleUserAccess`,{id,value}),
       );
+      if (!response)
+        throw new Error(
+          `an issue occured while performing the action on the user with id: ${id}`,
+        );
 
-    lookup[0].enabled = value;
-    return of(true).pipe(delay(500));
+      return Promise.resolve(response);
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 
   async getPage(
