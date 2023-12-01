@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
     this.appStateService.setAuthState({ error: undefined });
     this.errorMsg = null;
     this.submited = true;
-    
+
     if (!this.loginFormGroup.valid) {
       return;
     }
@@ -55,8 +55,9 @@ export class LoginComponent implements OnInit {
     try {
       await this.authService.login(username, password);
       this.router.navigateByUrl('/users');
-    } catch (err) {
-      this.errorMsg = '' + err;
+    } catch (err: any) {
+      this.errorMsg =
+        err instanceof Error ? err.message : err.message || JSON.stringify(err);
     }
   }
 }
