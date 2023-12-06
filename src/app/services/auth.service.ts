@@ -34,11 +34,11 @@ export class AuthService {
       const response = await this.authenticate(username, password);
       if (response.accessToken) {
         const payload = jwtDecode<any>(response.accessToken);
-        const { roles, username } = payload;
+        const { auth: roles, sub: username } = payload;
         this.appStateService.setAuthState({
           isAuthenticated: true,
           auth: response.accessToken,
-          roles,
+          roles: roles[0].authority,
           username,
         });
         sessionStorage.setItem('accessToken',response.accessToken);
