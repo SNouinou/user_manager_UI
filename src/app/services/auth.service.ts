@@ -3,55 +3,45 @@ import { compareSync, hashSync } from 'bcryptjs';
 import { jwtDecode } from 'jwt-decode';
 import { Observable, firstValueFrom } from 'rxjs';
 import { AppStateService } from './app-state.service';
+import { HttpClient } from '@angular/common/http';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private data: Array<any> = [
-    {
-      username: 'user1',
-      password: hashSync('pwd1', 2),
-      role: ['user1', 'admin'],
-      token:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwicm9sZXMiOlsidXNlcjEiLCJhZG1pbiJdfQ.a2tXpb5K2qD-D3hfcq75MTs5Z7YRO9BaJ8cI6G7t1l8',
-    },
-  ];
 
-  constructor(private appStateService: AppStateService) {}
+  constructor(private appStateService: AppStateService, private _httpClient: HttpClient) {}
 
-  // TODO: replace this method with http request  
-  authenticate(username: string, password: string): Observable<any> {
-    return new Observable((subscriber) => {
-      const credentials = this.data.find((item) => item.username === username);
+  async authenticate(username: string, password: string): Promise<{accessToken:string}> {
+    try {
+      const response = await firstValueFrom(
+        this._httpClient.post<{accessToken:string}>(`${UserService.BACKEND_HOST}/auth`,{username,password}),
+      );
+      if (!response || !response.accessToken)
+        throw new Error(
+          'unvalid response from authentication server.',
+        );
 
-      if (!credentials) {
-        subscriber.error(new Error('user not found'));
-      }
-
-      if (!compareSync(password, credentials.password)) {
-        subscriber.error(new Error('user not found'));
-      } else {
-        subscriber.next(credentials);
-      }
-      subscriber.complete();
-    });
+      return Promise.resolve(response);
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 
   async login(username: string, password: string) {
     try {
-      const response = await firstValueFrom(
-        this.authenticate(username, password),
-      );
-      if (response.token) {
-        const payload = jwtDecode<any>(response.token);
-        const { roles, username } = payload;
+      const response = await this.authenticate(username, password);
+      if (response.accessToken) {
+        const payload = jwtDecode<any>(response.accessToken);
+        const { auth: roles, sub: username } = payload;
         this.appStateService.setAuthState({
           isAuthenticated: true,
-          auth: response.token,
-          roles,
+          auth: response.accessToken,
+          roles: roles[0].authority,
           username,
         });
+        sessionStorage.setItem('accessToken',response.accessToken);
       }
       return;
     } catch (err) {

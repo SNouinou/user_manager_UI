@@ -69,7 +69,9 @@ export class UsersComponent implements OnInit {
       })
       .catch((err) => {
         this.errorMsg =
-          err instanceof Error ? err.message : JSON.stringify(err);
+          err instanceof Error
+            ? err.message
+            : err.message || JSON.stringify(err);
       });
   }
 
@@ -85,14 +87,18 @@ export class UsersComponent implements OnInit {
 
     this.userService
       .setUserActiveState(userRow.id, !userRow.enabled)
-      .then(data => {
-          if (data) userRow.enabled = !userRow.enabled;
-        }).catch(err => {
-          this.errorMsg =
-            err instanceof Error ? err.message : JSON.stringify(err);
-        }).finally(()=>{
-          userRow.disable.loading = false;
-        });
+      .then((data) => {
+        if (data) userRow.enabled = !userRow.enabled;
+      })
+      .catch((err) => {
+        this.errorMsg =
+          err instanceof Error
+            ? err.message
+            : err.message || JSON.stringify(err);
+      })
+      .finally(() => {
+        userRow.disable.loading = false;
+      });
   }
 
   onSearchFormSubmit(query: string): void {
