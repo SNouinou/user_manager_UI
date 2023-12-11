@@ -1,9 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UserRow } from '../models/user-row';
 
 @Component({
@@ -18,6 +13,13 @@ export class UserListRowComponent {
     new EventEmitter<UserRow>();
   @Output() handleDeleteUser: EventEmitter<UserRow> =
     new EventEmitter<UserRow>();
+  @Output() handleUserClick: EventEmitter<UserRow> =
+    new EventEmitter<UserRow>();
+
+  onUserClick(event: any): void {
+    event.preventDefault()
+    this.handleUserClick.emit(this.user);
+  }
 
   onDisableUser(): void {
     this.handleDisableUser.emit(this.user);

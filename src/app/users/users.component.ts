@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { UserRow } from '../models/user-row';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-users',
@@ -20,7 +21,7 @@ export class UsersComponent implements OnInit {
 
   loading!: boolean;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private router: Router) {}
 
   ngOnInit(): void {
     this.currentPage = 1;
@@ -73,6 +74,11 @@ export class UsersComponent implements OnInit {
             ? err.message
             : err.message || JSON.stringify(err);
       });
+  }
+
+  handleUserClick(userRow: UserRow): void {
+    const username = userRow.username;
+    this.router.navigateByUrl('/profile/'+username);
   }
 
   handleDisableUser(userRow: UserRow): void {

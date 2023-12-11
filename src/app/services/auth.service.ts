@@ -37,7 +37,7 @@ export class AuthService {
         const { auth: roles, sub: username } = payload;
         this.appStateService.setAuthState({
           isAuthenticated: true,
-          auth: response.accessToken,
+          token: response.accessToken,
           roles: roles[0].authority,
           username,
         });
