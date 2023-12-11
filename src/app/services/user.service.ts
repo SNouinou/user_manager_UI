@@ -1,16 +1,12 @@
 import { Injectable } from '@angular/core';
 import {
   Observable,
-  delay,
-  dematerialize,
   firstValueFrom,
-  materialize,
-  of,
-  throwError,
 } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '../models/user';
 import { HttpClient } from '@angular/common/http';
+import { Profile } from '../models/profile';
 
 @Injectable({
   providedIn: 'root',
@@ -69,6 +65,16 @@ export class UserService {
     } catch (error) {
       return Promise.reject(error);
     }
+  }
+
+  getUserProfileObs(username: string, authToken: string): Observable<Profile> {
+        return this._httpClient.get<Profile>(
+          `${UserService.BACKEND_HOST}/users/${username}`, {
+            headers: { 
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${authToken}`
+           }
+        });
   }
 
   async getPage(
