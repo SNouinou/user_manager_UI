@@ -15,22 +15,7 @@ export class UserService {
   static readonly PAGE_SIZE = 5;
   static readonly BACKEND_HOST = 'http://localhost:4200/api';
 
-  private users!: Array<User>;
   constructor(private _httpClient: HttpClient) {
-    this.users = [
-      {
-        id: uuidv4(),
-        username: 'admin',
-        role: 'admin',
-        enabled: true,
-      },
-      {
-        id: uuidv4(),
-        username: 'user1',
-        role: 'role1',
-        enabled: true,
-      },
-    ];
   }
 
   async deleteUser(id: string): Promise<boolean> {
