@@ -13,6 +13,7 @@ import { UserSearchFormComponent } from './user-search-form/user-search-form.com
 import { UsersComponent } from './users/users.component';
 import { HttpClientModule } from '@angular/common/http';
 import { BatchComponent } from './batch/batch.component';
+import { UserModalComponent } from './user-modal/user-modal.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { BatchComponent } from './batch/batch.component';
     ProfileComponent,
     GenerateUsersComponent,
     BatchComponent,
+    UserModalComponent,
   ],
   imports: [
     BrowserModule,

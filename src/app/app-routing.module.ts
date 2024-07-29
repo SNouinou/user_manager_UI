@@ -5,13 +5,14 @@ import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
 import { UsersComponent } from './users/users.component';
 import { GenerateUsersComponent } from './generate-users/generate-users.component';
+import { UserModalComponent } from './user-modal/user-modal.component';
 
 const routes: Routes = [
   { path: 'users', component: UsersComponent, canActivate: [authenticationGuard] },
   { path: 'profile/:id', component: ProfileComponent, canActivate: [authenticationGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'generate', component: GenerateUsersComponent },
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', component: UserModalComponent, pathMatch: 'full' },
 ];
 
 @NgModule({

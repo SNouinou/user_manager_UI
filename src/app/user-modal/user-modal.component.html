@@ -1,0 +1,47 @@
+<!-- Modal Body -->
+<!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
+<div
+  class="modal fade "
+  id="modalId"
+  tabindex="-1"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  role="dialog"
+  aria-labelledby="modalTitleId"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg"
+    role="document"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitleId">Welcome to UserManager!</h5>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="closeModal()"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>UserManager</strong> is a powerful application designed for managing users, their roles, and access rights. This app is created to showcase user management functionalities and provide a hands-on experience with Spring Security and Angular.</p>
+
+        <h4>Getting Started:</h4>
+        <ol>
+            <li><strong>Request a User List:</strong> Begin by generating a random list of users through the app. This list will serve as your initial dataset for managing user roles and permissions.</li>
+            <li><strong>Upload Users:</strong> Once you have your list, upload it to the app. This is the sole method for adding users to the system.</li>
+            <li><strong>Log In and Manage:</strong> After uploading, log in to the app. As an admin, you'll have comprehensive control over user access and roles. You can modify permissions, assign roles, and even delete users as needed.</li>
+        </ol>
+
+        <h3>Features:</h3>
+        <ul class="features">
+            <li><strong>Admin Controls:</strong> Admin users have full authority to manage other users, including setting roles and adjusting access rights.</li>
+            <li><strong>Role-Based Access:</strong> Define and manage various user roles to control what each user can see and do within the app.</li>
+        </ul>
+
+        <p><strong>Note:</strong> This app serves as a demo for a coding exercise and showcases practical use of Spring Security and Angular. Dive in and explore the robust user management capabilities!</p>
+      </div>
+    </div>
+  </div>
+</div>

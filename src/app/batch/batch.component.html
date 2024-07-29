@@ -1,5 +1,5 @@
 <div class="card col-6 offset-sm-3">
-  <div class="card-header">batch Users</div>
+  <div class="card-header">2-Upload a User List</div>
   <div class="card-body">
     <form (ngSubmit)="handleBatch()">
       <div class="mb-3 row">
@@ -49,3 +49,4 @@
 >
   <strong>success: {{ this.successMsg }}</strong>
 </div>
+<div class="col-6 offset-sm-3" *ngIf="this.successMsg">Pick a user from the uploaded json and <a href='/login'>login</a>. </div>
