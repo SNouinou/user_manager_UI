@@ -30,16 +30,21 @@ export class GenerateUsersComponent {
 
   ngOnInit(): void {}
 
-  downloadFile(fileContent: any, filaName: string): any {
-    const blob = new Blob([JSON.stringify(fileContent)], {
-      type: 'text/plain;charset=utf-8',
+  downloadFile(fileContent: any, filename: string | null): any {
+    const content = JSON.stringify(
+      fileContent,
+      null,
+      2,
+    );
+    const mimeType = 'application/json';
+    const blob = new Blob([content], {
+      type: mimeType,
     });
     const dataUrl = URL.createObjectURL(blob);
 
     const link = document.createElement('a');
-
-    link.download = filaName;
     link.href = dataUrl;
+    link.download = filename || 'users_list';
 
     link.click();
 
