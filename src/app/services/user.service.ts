@@ -94,7 +94,7 @@ export class UserService {
     return this.getPage(page, searchFilter);
   }
 
-  async generate(count: number): Promise<{ filename: string; content: any }> {
+  async generate(count: number): Promise<{ filename: string | null; content: any }> {
     try {
       const response = await firstValueFrom(
         this._httpClient.get(`${UserService.BACKEND_HOST}/users/generate`, {
@@ -105,7 +105,7 @@ export class UserService {
       const content = response.body;
 
       const contentDisposition = response.headers.get('Content-Disposition');
-      const filename = this.extractFilename(contentDisposition) || 'file';
+      const filename = this.extractFilename(contentDisposition);
 
       return Promise.resolve({ filename, content });
     } catch (error) {
